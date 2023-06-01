@@ -2,12 +2,6 @@
   Welcome, this is the home page
 </h1>  
 
-<% if user_signed_in? %>
-  <%= button_to("Sign out",
-                destroy_user_session_path, 
-                method: :delete,
-                class:"btn btn-primary",
-                ) %>
-<% else %>
+<% unless user_signed_in? %>
   <%= render "devise/sessions/form", resource: User.new, resource_name: :user %>
 <% end %>

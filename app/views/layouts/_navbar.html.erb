@@ -11,7 +11,7 @@
         </li>
       </ul>
       <ul>
-        <%= button_to "Logout", "#", class: "btn btn-primary" %>
+        <%= button_to "Logout", destroy_user_session_path, method: :delete, class: "btn btn-primary" if user_signed_in? %>
       </ul>
     </div>
   </div>

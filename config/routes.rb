@@ -6,6 +6,8 @@ Rails.application.routes.draw do
   
   devise_for :users
   
-  get 'home/dashboard'
-  root 'home#index'
+  get "/dashboard", controller: "home", action: "dashboard"
+  get "/profile", controller: "home", action: "profile"
+  get "/index", controller: "home", action: "index"
+  root "home#index"
 end
