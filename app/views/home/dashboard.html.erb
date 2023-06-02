@@ -66,3 +66,35 @@
     </div>
   </div>
 </div>
+
+
+<div class="table-responsive mt-5">
+  <div class="d-flex justify-content-between">
+    <h4>Listing Users</h4>
+    <%= link_to "Add User", "#", class: 'btn btn-primary' %>
+  </div>
+
+  <table class="table ">
+    <thead>
+      <tr>
+        <td></td>
+        <td>Full Name</td>
+        <td>Email</td>
+        <td>admin</td>
+        <td colspan="3">options</td>
+      </tr>
+    </thead>
+    <tbody>
+      <% User.all.each do |user| %>
+        <tr>
+          <td><%=user.avatar%></td>
+          <td><%=user.full_name%></td>
+          <td><%=user.email%></td>
+          <td><%=user.role%></td>
+          <td><%= link_to "Edit", "#", class: "btn btn-primary btn-sm" %> </td>
+          <td><%= link_to "Delete", "#", class: "btn btn-danger btn-sm" %> </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
