@@ -12,13 +12,18 @@ class HomeController < ApplicationController
     end
   end
 
-  def dashboard; end
+  def dashboard
+    @users = User.all
+  end
 
   def profile; end
 
   private
 
   def authenticate_user_admin
-    return redirect_to profile_path, flash: { alert: "User does not have access to the dashboard" } unless current_user.role?
+    return if current_user.role?
+
+    redirect_to profile_path,
+                flash: { alert: "User does not have access to the [dashboard]" }
   end
 end

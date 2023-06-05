@@ -1,0 +1,37 @@
+<tr>
+  <td><%=user.avatar%></td>
+  <td><%=user.full_name%></td>
+  <td><%=user.email%></td>
+  <td>
+    <div class="form-check form-switch">
+      <% if user.role? %>
+        <input id="user_<%= user.id %>" class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" onclick="toogleAdmin(<%= user.id %>)" checked>
+      <% else %>
+        <input id="user_<%= user.id %>" class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" onclick="toogleAdmin(<%= user.id %>)" >
+      <% end %>
+      
+    </div>    
+  </td>
+  <td>
+    <%= link_to edit_user_path(user), class: 'btn btn-primary btn-sm' do %>
+      <i class="bi bi-pencil-square"></i>
+    <% end %>
+  </td>
+  <td>
+    <%= link_to user_path(user), data: {turbo_method: :delete, turbo_confirm: "Are you sure?"}, class: "btn btn-danger btn-sm" do %>
+      <i class="bi bi-trash"></i>
+    <% end %>
+  </td>
+</tr>
+
+
+<script>
+  function toogleAdmin(id){
+    console.log('id: ', id)
+    // $.ajax({
+    //   type:"POST",
+    //   url:'/toogle/',
+    //   data:{user_id: id},
+    // })
+  }
+</script>

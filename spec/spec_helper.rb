@@ -21,6 +21,7 @@ SimpleCov.start "rails" do
   add_filter "/jobs/"
   add_filter "/mailers/"
   add_filter "/app/controllers/turbo_devise_controller.rb"
+  add_filter "app/controllers/registrations_controller.rb"
 
   add_group "Controllers", "app/controllers"
   add_group "Models", "app/models"
