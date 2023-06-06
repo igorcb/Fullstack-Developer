@@ -141,4 +141,29 @@ RSpec.describe UsersController, type: :controller do
       end
     end
   end
+
+  describe "GET #toggle" do
+    context "user not admin" do
+      login_user
+      it do
+        get :toggle_admin, params: { id: user.id }
+
+        expect(response).to redirect_to(profile_path)
+      end
+    end
+
+    context "user admin" do
+      login_admin
+
+      let(:user_toggle) { create(:user, role: false) }
+
+      it do
+        get :toggle_admin, params: { id: user_toggle.id }
+
+        user_toggle.reload
+        expect(user_toggle.role).to eq(true)
+        expect(response).to redirect_to(dashboard_path)
+      end
+    end
+  end
 end

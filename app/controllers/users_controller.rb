@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
   before_action :authenticate_user!
   before_action :authenticate_user_admin
-  before_action :set_user, only: %i[edit update destroy]
+  before_action :set_user, only: %i[edit update destroy toggle_admin]
 
   def new
     @user = User.new
@@ -38,6 +38,11 @@ class UsersController < ApplicationController
     end
   end
 
+  def toggle_admin
+    @user.toggle!(:role)
+    redirect_to dashboard_path, notice: "Admin status was successfully updated."
+  end
+
   private
 
   def set_user
@@ -47,14 +52,6 @@ class UsersController < ApplicationController
   def user_params
     params.require(:user).permit(:full_name, :email, :role, :password, :password_confirmation)
   end
-
-  # def user_params_create
-  #   params.require(:user).permit(:full_name, :email, :role, :password, :password_confirmation)
-  # end
-
-  # def user_params_update
-  #   params.require(:user).permit(:full_name, :email, :role)
-  # end
 
   def authenticate_user_admin
     return if current_user.role?
