@@ -21,7 +21,12 @@
             </div>
           </div>
         </div>
-        <span class="h1 d-inline-block mt-1 mb-3"><%= User.count%></span>
+        <span class="h1 d-inline-block mt-1 mb-3">
+          <%= turbo_stream_from "user_all" %>
+          <div id="user_count">
+            <%= render 'users/user_count', user: @users.count %>
+          </div>
+        </span>
       </div>
     </div>
   </div>
@@ -41,7 +46,13 @@
             </div>
           </div>
         </div>
-        <span class="h1 d-inline-block mt-1 mb-3"><%= User.where(role: true).count %></span>
+        <span class="h1 d-inline-block mt-1 mb-3">
+          <%= turbo_stream_from "user_count_admin" %>
+          <div id="count_admin">
+            <%= render 'users/user_count', user: @users_admin.count %>
+          </div>
+        </span>
+
       </div>
     </div>
   </div>
@@ -61,31 +72,27 @@
             </div>
           </div>
         </div>
-        <span class="h1 d-inline-block mt-1 mb-3"><%= User.where(role: false).count %></span>
+        <span class="h1 d-inline-block mt-1 mb-3">
+          <%= turbo_stream_from "user_count_not_admin" %>
+          <div id="count_not_admin">
+            <%= render 'users/user_count', user: @users_not_admin.count %>
+          </div>
+        </span>
       </div>
     </div>
   </div>
 </div>
 
-
-<div class="table-responsive mt-5">
-  <div class="d-flex justify-content-between">
-    <h4>Listing Users</h4>
+<div class="mt-5">
+  <div class="d-flex gap-2 justify-content-end">
     <%= link_to "Add User", new_user_path, class: 'btn btn-primary' %>
   </div>
 
-  <table class="table ">
-    <thead>
-      <tr>
-        <td></td>
-        <td>Full Name</td>
-        <td>Email</td>
-        <td>admin</td>
-        <td colspan="3">options</td>
-      </tr>
-    </thead>
-    <tbody>
+  <div class="mt-2">
+    <%= turbo_stream_from "users" %>
+    <div id="users">
       <%= render @users %>
-    </tbody>
-  </table>
+    </div>
+  </div>
+
 </div>

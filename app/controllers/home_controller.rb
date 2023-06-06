@@ -14,6 +14,8 @@ class HomeController < ApplicationController
 
   def dashboard
     @users = User.all
+    @users_admin = User.admin
+    @users_not_admin = User.not_admin
   end
 
   def profile; end
