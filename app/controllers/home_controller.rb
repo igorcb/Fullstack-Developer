@@ -20,6 +20,10 @@ class HomeController < ApplicationController
 
   def profile; end
 
+  def import_user
+    ImportUserJob.perform_async
+  end
+
   private
 
   def authenticate_user_admin

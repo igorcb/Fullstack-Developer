@@ -85,6 +85,11 @@
 
 <div class="mt-5">
   <div class="d-flex gap-2 justify-content-end">
+    <%#= button_to "Say Hello Async", hello_path, remote: true %>
+    <%= button_to import_user_path, remote: true, class: "btn btn-success" do %>
+      Import
+      <i class="bi bi-filetype-xls" style="margin-left: 8px" ></i>
+    <% end %>
     <%= link_to "Add User", new_user_path, class: 'btn btn-primary' %>
   </div>
 
