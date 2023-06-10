@@ -8,7 +8,7 @@ class HomeController < ApplicationController
     if current_user.role?
       redirect_to dashboard_path
     else
-      redirect_to profile_path
+      redirect_to user_path(current_user)
     end
   end
 
