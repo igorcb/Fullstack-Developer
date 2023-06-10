@@ -33,5 +33,7 @@ module FullstackDeveloper
 
     # Don't generate system test files.
     config.generators.system_tests = nil
+    config.middleware.use Rack::TempfileReaper
   end
+  Sidekiq.strict_args!(false)
 end

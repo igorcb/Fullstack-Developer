@@ -1,6 +1,7 @@
 require 'sidekiq/web'
 
 Rails.application.routes.draw do
+  resources :import_users, only: [:new, :create]
   devise_for :users, controllers: { registrations: "registrations" }
   authenticate :user, lambda { |u| u.role? } do
     mount Sidekiq::Web => "/sidekiq"
@@ -15,7 +16,6 @@ Rails.application.routes.draw do
     get "users", to: "devise/sessions#new"
   end
 
-  post "/import_user/", to: "home#import_user"
   get "/toggle_admin/:id", controller: "users", action: "toggle_admin"
   get "/dashboard", controller: "home", action: "dashboard"
   get "/profile", controller: "home", action: "profile"
