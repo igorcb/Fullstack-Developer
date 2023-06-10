@@ -9,6 +9,8 @@ class User < ApplicationRecord
   validates :password, length: { minimum: 6, maximum: 100 }, on: :create
   validates :full_name, presence: true
 
+  has_one_attached :avatar  
+
   scope :admin, -> { User.where(role: true) }
   scope :not_admin, -> { User.where(role: false) }
 

@@ -13,7 +13,7 @@ class HomeController < ApplicationController
   end
 
   def dashboard
-    @users = User.all
+    @users = User.order(:created_at)
     @users_admin = User.admin
     @users_not_admin = User.not_admin
   end
