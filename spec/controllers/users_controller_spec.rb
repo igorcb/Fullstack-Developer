@@ -118,6 +118,24 @@ RSpec.describe UsersController, type: :controller do
         expect(response).to redirect_to(dashboard_path)
       end
     end
+
+    context "user is not admin but he is the owner of the profile" do
+      let(:user_not_admin) { create(:user) }
+
+      before do
+        request.env["devise.mapping"] = Devise.mappings[:user]
+        sign_in user_not_admin
+      end
+
+      it "updates the information" do
+        full_name = Faker::Name.name
+        put :update, params: { id: user_not_admin.id, user: { full_name: full_name } }
+
+        user_last = User.where(id: user_not_admin.id).first
+        expect(user_last.full_name).to eq(full_name)
+        expect(response).to redirect_to(user_path(user_not_admin))
+      end
+    end
   end
 
   describe "DELETE #destroy" do
