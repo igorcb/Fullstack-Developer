@@ -2,12 +2,17 @@ require "rails_helper"
 
 RSpec.describe HomeController, type: :controller do
   context "when access GET '/' user not admin" do
-    login_user
+    let(:user_not_admin) { create(:user) }
+
+    before do
+      request.env["devise.mapping"] = Devise.mappings[:user]
+      sign_in user_not_admin
+    end
 
     it do
       get "index"
 
-      expect(response).to redirect_to(profile_path)
+      expect(response).to redirect_to(user_path(user_not_admin))
     end
   end
 

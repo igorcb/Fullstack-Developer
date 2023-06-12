@@ -60,9 +60,10 @@ class UsersController < ApplicationController
   end
 
   def authenticate_user_admin
-    @user = User.find(params[:id])
+    id = (params[:id].presence || -1)
+    @user ||= User.where(id: id).first
 
-    return if @user.id == current_user.id
+    return if @user.present? && @user.id == current_user.id
 
     return if current_user.role?
 
