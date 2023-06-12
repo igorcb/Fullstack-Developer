@@ -9,17 +9,23 @@ class UserImportService
   def call
     spreadsheet = Roo::Spreadsheet.open(@file_path)
     header = spreadsheet.row(1)
-    lines = spreadsheet.last_row - 1
-    secure = SecureRandom.hex
+    lines = spreadsheet.last_row
+    secure = "123456"
     password = { password: secure, password_confirmation: secure }
-    (2..lines).each do |i|
-      row = Hash[[header, spreadsheet.row(i)].transpose]
+    (2..lines).each do |line|
+      row = Hash[[header, spreadsheet.row(line)].transpose]
       row.reverse_merge!(password)
       User.create!(row)
     end
 
-    Upload.where(id: @upload_id).update(status: :completed, total_lines: spreadsheet.last_row)
+    find_update.update(status: :completed, total_lines: spreadsheet.last_row)
   rescue StandardError => e
-    Upload.where(id: @upload_id).update(status: :failed, error_messages: e.message)
+    find_update.update(status: :failed, error_messages: e.message)
+  end
+
+  private
+
+  def find_update
+    @find_update ||= Upload.find(@upload_id)
   end
 end
