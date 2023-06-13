@@ -40,7 +40,7 @@ services:
   
   sidekiq:
     build: .
-    command: bundle exec sidekiq -C config/sidekiq.yml
+    command: bundle exec sidekiq
     depends_on:
       - postgres
       - redis

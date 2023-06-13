@@ -1,12 +1,23 @@
 FROM ruby:3.2.1
 
-RUN apt-get update && apt-get install -qq -y --no-install-recommends \
+RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
+
+RUN apt update -y && apt install -qq -y --no-install-recommends \
   build-essential nodejs libpq-dev imagemagick libvips zlib1g-dev apt-utils \
   libmagickwand-dev libmagickcore-dev vim redis-tools 
 
+RUN npm install -g yarn
+RUN gem install bundler -v 2.4.13
+
 WORKDIR /umanni
-COPY . /umanni
-RUN bundle install
+
+COPY Gemfile Gemfile.lock ./
+
+RUN bundle check || bundle install 
+
+COPY package.json yarn.lock ./
+
+RUN yarn install --check-files
 
 ENV POSTGRES_HOST=postgres
 ENV POSTGRES_USER=postgres
