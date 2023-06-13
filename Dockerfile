@@ -15,6 +15,8 @@ COPY Gemfile Gemfile.lock ./
 
 RUN bundle check || bundle install 
 
+RUN bundle exec rails assets:precompile
+
 COPY package.json yarn.lock ./
 
 RUN yarn install --check-files
