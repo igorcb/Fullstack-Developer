@@ -33,34 +33,36 @@ RSpec.describe ImportUsersController, type: :controller do
     end
 
     context "user admin" do
-      let(:params) { ActionController::Parameters.new(import: { file: Rails.root.join("spec/fixtures/files/user_import.xlsx") }) }
-      let(:file_path) { Rails.root.join("spec/fixtures/files/user_import.xlsx") }
-      let(:file) { fixture_file_upload(file_path, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet") }
-      let(:temp_file) { instance_double(Tempfile) }
-      let(:upload) { instance_double(Upload) }
-
       login_admin
-      it "with params invalid" do
-        post :create, params: { import: { file: "" } }
+      let(:params) { ActionController::Parameters.new(import: { file: "test_file.xlsx" }) }
+      let(:user) { create(:user, role: :admin) }
+      let(:file_path) { Rails.root.join("tmp/uploads/test_file.xlsx") }
+      let(:uploaded_file) { instance_double(ActionDispatch::Http::UploadedFile) }
 
-        expect(response).not_to be_successful
+      before do
+        sign_in(user)
+        allow(File).to receive(:open).and_call_original
+        allow(uploaded_file).to receive(:read).and_return("test content")
       end
 
       it "with params valid" do
-        allow(Tempfile).to receive(:new).and_wrap_original do |original_method, *args|
-          temp_file = original_method.call(*args)
-          allow(temp_file).to receive(:path).and_return(file_path)
-          temp_file
-        end
-
-        expect(Upload).to receive(:create).with(file_name: "user_import.xlsx", status: :processing).and_return(upload = instance_double(Upload))
-        expect(upload).to receive(:id).and_return(1)
-
-        expect(UserImportJob).to receive(:perform_async).with(file_path, 1)
+        file = fixture_file_upload("test_file.xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+        allow(Rails).to receive(:root).and_return(Pathname.new(""))
+        allow(file).to receive(:original_filename).and_return("test_file.xlsx")
+        allow(UserImportJob).to receive(:perform_async)
 
         post :create, params: { file: file }
 
+        expect(File).to have_received(:open).with(file_path, "wb")
+        expect(UserImportJob).to have_received(:perform_async).with(file_path, an_instance_of(Integer))
         expect(flash[:notice]).to eq("Importing users started in the background.")
+        expect(response).to redirect_to(dashboard_path)
+      end
+
+      it "with params invalid" do
+        post :create, params: { file: nil }
+
+        expect(flash[:alert]).to eq("No files have been selected.")
         expect(response).to redirect_to(dashboard_path)
       end
 

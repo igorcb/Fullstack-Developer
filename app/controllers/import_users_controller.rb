@@ -8,9 +8,15 @@ class ImportUsersController < ApplicationController
 
   def create
     if params[:file].present?
-      temp_file = create_temp_file
-      upload = Upload.create(file_name: params[:file].original_filename, status: :processing)
-      UserImportJob.perform_async(temp_file.path, upload.id)
+      file = params[:file]
+      file_path = Rails.root.join("tmp", "uploads", file.original_filename)
+
+      File.open(file_path, "wb") do |f|
+        f.write(file.read)
+      end
+
+      upload = Upload.create(file_name: file.original_filename, status: :processing)
+      UserImportJob.perform_async(file_path, upload.id)
       flash[:notice] = "Importing users started in the background."
     else
       flash[:alert] = "No files have been selected."
@@ -20,15 +26,6 @@ class ImportUsersController < ApplicationController
   end
 
   private
-
-  def create_temp_file
-    file_name = "#{params[:file].original_filename}_#{Time.zone.now}"
-    temp_file = Tempfile.new([file_name, ".xlsx"])
-    temp_file.binmode
-    temp_file.write(params[:file].read)
-    temp_file.rewind
-    temp_file
-  end
 
   def import_params
     params.require(:import).permit(:file)
