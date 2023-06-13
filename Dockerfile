@@ -15,11 +15,11 @@ COPY Gemfile Gemfile.lock ./
 
 RUN bundle check || bundle install 
 
-RUN bundle exec rails assets:precompile
-
 COPY package.json yarn.lock ./
 
 RUN yarn install --check-files
+
+RUN bundle exec rails assets:precompile
 
 ENV POSTGRES_HOST=postgres
 ENV POSTGRES_USER=postgres

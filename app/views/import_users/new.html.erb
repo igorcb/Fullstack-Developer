@@ -1,4 +1,19 @@
-<%= form_tag import_users_path, multipart: true do %>
-  <%= file_field_tag :file %>
-  <%= submit_tag 'Importar' %>
-<% end %>
+
+<div class= "d-flex align-items-center justify-content-center mt-5">
+  <div class="w-50">
+    <h2 class="text-center">Import Users</h2>
+    <div class="d-flex align-items-center justify-content-center">
+
+      <%= form_with(url: import_users_path, method: :post, local: true, multipart: true) do |form| %>
+        <div class="mb-3">
+          <%= form.file_field :file, class: "form-control" %>
+        </div>
+
+        <div>
+          <%= form.submit 'Import', class: "btn btn-primary" %>
+        </div>
+      <% end %>
+
+    </div>
+  </div>
+</div>  

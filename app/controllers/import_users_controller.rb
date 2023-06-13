@@ -8,6 +8,8 @@ class ImportUsersController < ApplicationController
 
   def create
     if params[:file].present?
+      FileUtils.mkdir_p("tmp/uploads")
+
       file = params[:file]
       file_path = Rails.root.join("tmp", "uploads", file.original_filename)
 
